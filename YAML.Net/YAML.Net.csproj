@@ -4,6 +4,10 @@
     <TargetFramework>netstandard1.6</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD1_6;PORTABLE;</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Include="..\YamlDotNet\Core\AnchorNotFoundException.cs" Link="Core\AnchorNotFoundException.cs" />
     <Compile Include="..\YamlDotNet\Core\CharacterAnalyzer.cs" Link="Core\CharacterAnalyzer.cs" />
@@ -188,6 +192,10 @@
     <Compile Include="..\YamlDotNet\Serialization\YamlFormatter.cs" Link="Serialization\YamlFormatter.cs" />
     <Compile Include="..\YamlDotNet\Serialization\YamlIgnoreAttribute.cs" Link="Serialization\YamlIgnoreAttribute.cs" />
     <Compile Include="..\YamlDotNet\Serialization\YamlMember.cs" Link="Serialization\YamlMember.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
   </ItemGroup>
 
 </Project>
