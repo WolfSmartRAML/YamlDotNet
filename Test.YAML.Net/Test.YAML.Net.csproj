@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RAML.Net\RAML.Net.csproj" />
     <ProjectReference Include="..\YAML.Net\YAML.Net.csproj" />
   </ItemGroup>
 

@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{9BFB91B2-3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.YAML.Net", "Test.YAML.Net\Test.YAML.Net.csproj", "{829799CA-75DE-492D-9116-74057B548A95}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RAML.Net", "RAML.Net\RAML.Net.csproj", "{BABAB900-5E81-4150-B254-7E192B9EA6F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{829799CA-75DE-492D-9116-74057B548A95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{829799CA-75DE-492D-9116-74057B548A95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{829799CA-75DE-492D-9116-74057B548A95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BABAB900-5E81-4150-B254-7E192B9EA6F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BABAB900-5E81-4150-B254-7E192B9EA6F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BABAB900-5E81-4150-B254-7E192B9EA6F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BABAB900-5E81-4150-B254-7E192B9EA6F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

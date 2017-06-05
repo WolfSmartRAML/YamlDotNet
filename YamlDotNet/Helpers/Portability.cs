@@ -126,7 +126,14 @@ namespace YamlDotNet
 
         public static bool IsAssignableFrom(this Type type, Type source)
         {
-            return type.IsAssignableFrom(source.GetTypeInfo());
+            try
+            {
+                return type.IsAssignableFrom(source.GetTypeInfo());
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
         }
 
         public static bool IsAssignableFrom(this Type type, TypeInfo source)

@@ -66,7 +66,7 @@ namespace YamlDotNet.Serialization.ValueDeserializers
                     }
                 }
             }
-            catch (YamlException)
+            catch (YamlException ex)
             {
                 throw;
             }
