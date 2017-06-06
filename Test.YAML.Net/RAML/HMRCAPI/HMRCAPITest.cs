@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RAML.Net.Types;
+using RAML.Net.YAML;
 using YamlDotNet.RepresentationModel;
 using YamlDotNet.Serialization;
 
@@ -69,7 +70,8 @@ namespace Test.YAML.Net.RAML.HMRCAPI
                 {
                     var ser = new DeserializerBuilder()
                                     .IgnoreUnmatchedProperties()
-                                    .WithTagMapping("!include", typeof(string)) // AKSTODO
+                                    .WithTagMapping("!include", typeof(IncludeNode)) 
+                                    .WithNodeDeserializer(new IncludeNodeDeserializer(@"C:\WIP\Projects\hmrc\githubWS\hmrc-api\apis\SA"))
                                     .Build();
 
                     var raml = ser.Deserialize<Document>(sr);

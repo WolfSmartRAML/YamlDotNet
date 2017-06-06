@@ -4,4 +4,8 @@
     <TargetFramework>netstandard1.6</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\YAML.Net\YAML.Net.csproj" />
+  </ItemGroup>
+
 </Project>
