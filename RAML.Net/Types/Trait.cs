@@ -6,5 +6,6 @@ namespace RAML.Net.Types
 {
     public class Trait
     {
+
     }
 }
