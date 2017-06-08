@@ -10,6 +10,8 @@
     <PackageReference Include="MSTest.TestFramework" Version="1.1.11" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
     <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.1" />
+    <PackageReference Include="NJsonSchema.CodeGeneration.CSharp" Version="9.1.7" />
+    <PackageReference Include="NJsonSchema.CodeGeneration.TypeScript" Version="9.1.7" />
   </ItemGroup>
 
   <ItemGroup>

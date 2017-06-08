@@ -43,14 +43,26 @@ namespace RAML.Net.YAML
             var file = Path.Combine(DocumentPath, node.Value);
             using (var sr = new StringReader(new StreamReader(new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read)).ReadToEnd()))
             {
+                var ext = Path.GetExtension(file);
+                if (ext.StartsWith("."))
+                    ext = ext.Substring(1);
+
+                var name = Path.GetFileNameWithoutExtension(node.Value);
+
+                var ns = Path.GetDirectoryName(node.Value);
+                ns = ns.Replace('/', '.');
+                ns = ns.Replace('\\', '.');
+
                 //value = sr.ReadToEnd();
                 value = new IncludeNode()
                 {
+                    Name = name,
+                    Namespace = ns,
                     Content = sr.ReadToEnd(),
                     File = Path.GetFileName(file),
                     FilePath = file,
-                    Extension = Path.GetExtension(file)
-            };
+                    Extension = ext
+                };
             }
 
             return true;

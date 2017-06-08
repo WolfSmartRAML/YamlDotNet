@@ -65,6 +65,23 @@ namespace RAML.Net
             }
         }
 
+        public static IEnumerable<JsonSchemaDataType> FindJsonSchemaDataTypes(this JObject node)
+        {
+            var jsonTypes0 = node.SelectTokens("$..type").ToList();
+            var jsonTypes1 = node.SelectTokens("$..type[?(@.Extension == 'json')]").ToList();
+            var jsonTypes2 = node.SelectTokens("$..type").Where(n => n["Extension"].Value<string>() == "json").ToList();
+
+            //    .Select(t => new JsonSchemaDataType()
+            //{
+            //    Name = ((JObject)t).Properties().First(p => p.Name == "Name")
+            //});
+
+            return new List<JsonSchemaDataType>();
+        }
+
+
+
+
         public static string StringNode(this JProperty node)
         {
             //var vl = node.Value<string>();

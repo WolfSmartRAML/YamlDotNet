@@ -8,6 +8,10 @@ namespace RAML.Net.YAML
     {
         #region State
 
+        public string Namespace { get; set; }
+
+        public string Name { get; set; }
+
         public string File { get; set; }
 
         public string FilePath { get; set; }
