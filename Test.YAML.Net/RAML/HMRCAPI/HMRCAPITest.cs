@@ -254,8 +254,8 @@ namespace Test.YAML.Net.RAML.HMRCAPI
                 var doc = new Document();
 
                 // get all json datatypes
-                var x = (JObject)raml2.Root;
-                var z = x.FindJsonSchemaDataTypes();
+                //var x = (JObject)raml2.Root;
+                var z = ((JObject)raml2.Root).FindJsonSchemaDataTypes().ToDictionary(t => $"{t.Namespace}.{t.Name}");
 
                 // get top level nodes
                 var all = raml2.Properties().ToDictionary(p => p.Name);

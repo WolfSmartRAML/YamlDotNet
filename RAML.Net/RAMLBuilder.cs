@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using MoreLinq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RAML.Net.Types;
@@ -67,16 +68,37 @@ namespace RAML.Net
 
         public static IEnumerable<JsonSchemaDataType> FindJsonSchemaDataTypes(this JObject node)
         {
-            var jsonTypes0 = node.SelectTokens("$..type").ToList();
-            var jsonTypes1 = node.SelectTokens("$..type[?(@.Extension == 'json')]").ToList();
-            var jsonTypes2 = node.SelectTokens("$..type").Where(n => n["Extension"].Value<string>() == "json").ToList();
+            var jsonTypes = node.SelectTokens("$..type")
+                .Where(t => t.GetType() == typeof(JObject) && (((JObject) t)["Extension"]).Value<string>() == "json")
+                //.Select(t => ((JObject) t).ToObject<JsonSchemaDataType>())
+                //.DistinctBy(t => $"{t.Namespace}.{t.Name}");
+                .Select(t => new JsonSchemaDataType()
+                {
+                    //                    Name = ((JObject)t).Properties().First(p => p.Name == "Name")
+                    Namespace = ((JObject)t).Properties().First(p => p.Name == "Namespace").Value.ToString(), //(((JObject)t)["Namspace"]).Value<string>(),
+                    Name = ((JObject)t).Properties().First(p => p.Name == "Name").Value.ToString(),
+                    IncludeNode = ((JObject)t).ToObject<IncludeNode>()
+                })
+                .DistinctBy(t => $"{t.Namespace}.{t.Name}");
 
-            //    .Select(t => new JsonSchemaDataType()
+            //var x = jsonTypes.ToList();
+
+            //var types = node.SelectTokens("$..type").ToList();
+            //foreach (var t in node.SelectTokens("$..type").Where(t => t.GetType() == typeof(JObject) && (((JObject)t)["Extension"]).Value<string>() == "json"))
             //{
-            //    Name = ((JObject)t).Properties().First(p => p.Name == "Name")
-            //});
+            //    //if ((((JObject)t)["Extension"]).Value<string>() == "json")
+            //        Console.WriteLine("bosh");
+            //}
+            ////var jsonTypes1 = node.SelectTokens("$..type[?(@.Extension == 'json')]").ToList();
+            ////var jsonTypes3 = node.SelectTokens("$..type?(@.Extension == 'json')").ToList();
+            ////var jsonTypes2 = node.SelectTokens("$..type").Where(n => n["Extension"].Value<string>() == "json").ToList();
 
-            return new List<JsonSchemaDataType>();
+            ////    .Select(t => new JsonSchemaDataType()
+            ////{
+            ////    Name = ((JObject)t).Properties().First(p => p.Name == "Name")
+            ////});
+
+            return jsonTypes;
         }
 
 
