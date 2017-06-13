@@ -14,6 +14,132 @@ namespace RAML.Net
 {
     public static class RAMLBuilder
     {
+        static string[] METHODS = new string[]
+        {
+            "get",
+            "post",
+            "patch",
+            "put",
+            "delete",
+            "options",
+            "head"
+        };
+
+        public static Document Build(string ramlFile)
+        {
+            var doc = new Document();
+
+            try
+            {
+                var raml1 = RAMLBuilder.CreateRAMLObjectGraph(ramlFile);
+
+                var raml2 = RAMLBuilder.CreateJsonRAMLObjectGraph(raml1);
+
+                // get all json datatypes
+                doc.JsonDataTypes = ((JObject)raml2.Root).FindJsonSchemaDataTypes().ToDictionary(t => $"{t.Namespace}.{t.Name}");
+
+                // get top level nodes
+                var all = raml2.Properties().ToDictionary(p => p.Name);
+
+                foreach (var key in all.Keys)
+                {
+                    switch (key)
+                    {
+                        case "title":
+                        {
+                            doc.title = all["title"].StringNode();
+                        }
+                            break;
+                        case "description":
+                        {
+                            doc.description = all["description"].StringNode();
+                        }
+                            break;
+                        case "version":
+                        {
+                            doc.version = all["version"].StringNode();
+                        }
+                            break;
+                        case "baseUri":
+                        {
+                            doc.baseUri = all["baseUri"].StringNode();
+                        }
+                            break;
+                        case "baseUriParameters":
+                        {
+                            doc.baseUriParameters = all["baseUriParameters"].UriParameters();
+                        }
+                            break;
+                        case "protocols":
+                        {
+                            doc.protocols = all["protocols"].StringArrayNode();
+                        }
+                            break;
+                        case "mediaType":
+                        {
+                            doc.mediaType = all["mediaType"].StringArrayNode();
+                        }
+                            break;
+                        case "documentation":
+                        {
+                            doc.documentation = all["documentation"].DocumentationNode();
+                        }
+                            break;
+
+                        case "schemas":
+                            break;
+
+                        case "types":
+                            break;
+
+                        case "traits":
+                            break;
+
+                        case "resourceTypes":
+                            break;
+
+                        case "annotationTypes":
+                            break;
+
+                        case "securitySchemes":
+                        {
+                            doc.securitySchemes = all["securitySchemes"].SecuritySchemes();
+                        }
+                            break;
+
+                        case "securedBy":
+                        {
+                            doc.securedBy = all["securedBy"].StringArrayNode();
+                        }
+                            break;
+
+                        case "uses":
+                            break;
+
+                        default:
+                        {
+                            foreach(var kv in all.Where(k => k.Key.StartsWith("/")))
+                            {
+                                var graph = kv.Value.BuildResourceGraph();
+                                //var graph = ((JObject)kv.Value.Value).BuildResourceGraph();
+                                doc.resources.Add(graph);     
+                            }
+                                            
+                            var annotations = all.Where(k => k.Key.StartsWith("(") && k.Key.EndsWith(")")).ToList();
+                        }
+                            break;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            return doc;
+        }
+
         public static object CreateRAMLObjectGraph(string ramlFile)
         {
             try
@@ -81,27 +207,42 @@ namespace RAML.Net
                 })
                 .DistinctBy(t => $"{t.Namespace}.{t.Name}");
 
-            //var x = jsonTypes.ToList();
-
-            //var types = node.SelectTokens("$..type").ToList();
-            //foreach (var t in node.SelectTokens("$..type").Where(t => t.GetType() == typeof(JObject) && (((JObject)t)["Extension"]).Value<string>() == "json"))
-            //{
-            //    //if ((((JObject)t)["Extension"]).Value<string>() == "json")
-            //        Console.WriteLine("bosh");
-            //}
-            ////var jsonTypes1 = node.SelectTokens("$..type[?(@.Extension == 'json')]").ToList();
-            ////var jsonTypes3 = node.SelectTokens("$..type?(@.Extension == 'json')").ToList();
-            ////var jsonTypes2 = node.SelectTokens("$..type").Where(n => n["Extension"].Value<string>() == "json").ToList();
-
-            ////    .Select(t => new JsonSchemaDataType()
-            ////{
-            ////    Name = ((JObject)t).Properties().First(p => p.Name == "Name")
-            ////});
-
             return jsonTypes;
         }
 
+        public static ResourceNode BuildResourceGraph(this JProperty res, ResourceNode parent = null)
+        //public static ResourceNode BuildResourceGraph(this JObject res, ResourceNode parent = null)
+        {
+            var obj = res.Value as JObject;
 
+            var node = new ResourceNode()
+            {
+                Parent = parent,
+                Resource = obj.ToObject<Resource>()
+            };
+            node.Resource.relativeUri = res.Name;
+
+            foreach (var p in obj.Properties())
+            {
+                if (p.Name.StartsWith("/"))
+                {
+                    node.Children.Add(p.BuildResourceGraph(node));
+                }
+                else
+                {
+                    var n = p.Name;
+
+                    if (METHODS.Any(m => m == n))
+                    {
+                        var m = p.Value as JObject;
+                        node.Resource.Methods.Add(p.Name, m.ToObject<Method>());
+
+                    }
+                }
+            }
+
+            return node;
+        }
 
 
         public static string StringNode(this JProperty node)
@@ -148,15 +289,19 @@ namespace RAML.Net
             return dict;
         }
 
-        public static Dictionary<string, UriParameter> BaseUriParameters(this JProperty node)
+        //public static Dictionary<string, UriParameter> BaseUriParameters(this JProperty node)
+        public static Dictionary<string, UriParameter> UriParameters(this JProperty node)
         {
+            //var d = node.Values().Select(t => t.ToObject<UriParameter>())
+            //    .ToDictionary(up => up.displayName);
+
             var dict = node.Values().Select(t => new UriParameter()
                 {
-                    name = ((JProperty)t).Name,
+                    displayName = ((JProperty)t).Name,
                     type = ((JProperty)t).Value["type"].Value<string>(),
                     description = ((JProperty)t).Value["description"].Value<string>()
                 })
-                .ToDictionary(up => up.name);
+                .ToDictionary(up => up.displayName);
 
             return dict;
         }

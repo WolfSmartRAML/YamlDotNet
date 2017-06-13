@@ -225,11 +225,11 @@ namespace Test.YAML.Net.RAML.HMRCAPI
                 doc.baseUri = all["baseUri"].Value.ToString();
                 var x0 = all["baseUriParameters"].Values().Select(t => new UriParameter()
                     {
-                        name = ((JProperty)t).Name,
+                        displayName = ((JProperty)t).Name,
                         type = ((JProperty)t).Value["type"].Value<string>(),
                         description = ((JProperty)t).Value["description"].Value<string>()
                     })
-                    .ToDictionary(up => up.name);
+                    .ToDictionary(up => up.displayName);
                 doc.protocols = all["protocols"].Value.Select(p => (string)p).ToArray();
 
                 var resources = all.Where(k => k.Key.StartsWith("/")).ToList();
@@ -286,7 +286,7 @@ namespace Test.YAML.Net.RAML.HMRCAPI
                             break;
                         case "baseUriParameters":
                             {
-                                doc.baseUriParameters = all["baseUriParameters"].BaseUriParameters();
+                                doc.baseUriParameters = all["baseUriParameters"].UriParameters();
                             }
                             break;
                         case "protocols":
@@ -350,6 +350,20 @@ namespace Test.YAML.Net.RAML.HMRCAPI
                 throw;
             }
         }
+
+        [TestMethod]
+        public void C006()
+        {
+            try
+            {
+                var doc = RAMLBuilder.Build(@"C:\WIP\Projects\hmrc\githubWS\hmrc-api\apis\SA\application.00.raml");
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
+
 
         #endregion
     }

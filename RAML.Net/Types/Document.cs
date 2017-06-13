@@ -7,6 +7,14 @@ namespace RAML.Net.Types
 {
     public class Document
     {
+        public Document()
+        {
+            resources = new List<ResourceNode>();
+        }
+
+        // DataTypes
+        public Dictionary<string, JsonSchemaDataType> JsonDataTypes { get; set; }
+
         public string title { get; set; }
         public string description { get; set; }
         public string version { get; set; }
@@ -27,6 +35,6 @@ namespace RAML.Net.Types
         public string[] securedBy { get; set; }
         //public Dictionary<string, Library> uses { get; set; }
         public Dictionary<string, dynamic> uses { get; set; }
-        //public Resource[] resources { get; set; } 
+        public List<ResourceNode> resources { get; set; } 
     }
 }
